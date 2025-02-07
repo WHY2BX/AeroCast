@@ -3,6 +3,7 @@ import { Search } from "lucide-react"
 import Input from "@/components/input"
 import SearchResultList from "@/components/searchResult"
 import { useState } from "react"
+import { signIn, signOut, useSession } from "next-auth/react";
 
 interface InputProps {
   setLocation: (value: { latitude: number; longitude: number; cityName: string }) => void;
@@ -11,9 +12,13 @@ interface InputProps {
 export default function Header({ setLocation }: InputProps) {
   const [searchResult, setSearchResult] = useState<any>(null)
   const [search, setSearch] = useState("")
+  const { data: session } = useSession();
   return (
     <header className="flex items-center justify-between py-4">
+      {/* Logo */}
       <div className="text-2xl font-bold text-[#7CB9E8]">AeroCast</div>
+
+      {/* Search Bar */}
       <div className="flex items-center gap-4 flex-1 max-w-md mx-4">
         <div className="relative flex-1">
           <Input setSearchResult={setSearchResult} setSearch={setSearch} search={search}/>
@@ -24,13 +29,39 @@ export default function Header({ setLocation }: InputProps) {
         </div>
 
       </div>
+
+      {/* User Authentication Section */}
       <div className="flex items-center gap-2">
-        <span className="text-sm">Adam Smith</span>
-        <div className="h-8 w-8 rounded-full bg-[#7CB9E8] text-white flex items-center justify-center">
-          <span className="text-sm">AS</span>
-        </div>
+        {session ? (
+          <>
+            <span className="text-sm">{session.user?.name}</span>
+            <div className="h-8 w-8 rounded-full bg-[#7CB9E8] text-white flex items-center justify-center">
+              <span className="text-sm">{session.user?.name?.charAt(0)}</span>
+            </div>
+            <button
+              onClick={() => signOut()}
+              className="px-3 py-1 text-sm border border-gray-300 rounded-md hover:bg-gray-100"
+            >
+              Logout
+            </button>
+          </>
+        ) : (
+          <>
+            <button
+              onClick={() => signIn("google")}
+              className="px-3 py-1 text-sm border border-gray-300 rounded-md hover:bg-gray-100"
+            >
+              Login
+            </button>
+            <button
+              onClick={() => signIn("google")}
+              className="px-3 py-1 text-sm bg-[#7CB9E8] text-white rounded-md hover:bg-[#5A99C2]"
+            >
+              Register
+            </button>
+          </>
+        )}
       </div>
     </header>
-  )
+  );
 }
-
