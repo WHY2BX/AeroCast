@@ -4,8 +4,11 @@ import { Search } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { signIn, signOut, useSession } from "next-auth/react";
 
+import { useRouter } from "next/navigation";
+
 export default function Header() {
   const { data: session } = useSession();
+  const router = useRouter();
 
   return (
     <header className="flex items-center justify-between py-4">
@@ -15,7 +18,11 @@ export default function Header() {
       {/* Search Bar */}
       <div className="flex items-center gap-4 flex-1 max-w-md mx-4">
         <div className="relative flex-1">
-          <Input type="text" placeholder="Search country" className="pl-8 w-full" />
+          <Input
+            type="text"
+            placeholder="Search country"
+            className="pl-8 w-full"
+          />
           <Search className="absolute left-2 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
         </div>
       </div>
@@ -44,7 +51,7 @@ export default function Header() {
               Login
             </button>
             <button
-              onClick={() => signIn("google")}
+              onClick={() => router.push("/register")}
               className="px-3 py-1 text-sm bg-[#7CB9E8] text-white rounded-md hover:bg-[#5A99C2]"
             >
               Register

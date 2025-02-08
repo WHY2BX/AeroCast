@@ -8,12 +8,6 @@ import WeatherGraphs from "./weather-graphs"
 import ForecastTable from "./forecast-table"
 import WeatherRecommendation from "./weather-recommendation"
 import AirQualityWarning from "./air-quality-warning"
-<<<<<<< HEAD
-
-//Import for API
-
-export default function WeatherDashboard() {
-=======
 import {useState, useEffect} from "react"
 export default function WeatherDashboard() {
   const [location, setLocation] = useState({ latitude: 13.736717, longitude: 100.523186, cityName: "Bangkok" });
@@ -53,8 +47,6 @@ export default function WeatherDashboard() {
     console.log('city = ', locate.cityName)
 
   }
-
->>>>>>> 75ca7804701cd9e53f2b0c86b383516e40d37f8a
 
   return (
     <div className="max-w-7xl mx-auto p-4">
