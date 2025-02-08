@@ -15,9 +15,7 @@ export default function Navigation() {
             key={tab}
             onClick={() => setActiveTab(tab)}
             className={cn(
-              "flex-1 py-2 text-sm font-medium rounded-md",
-              activeTab === tab ? "bg-white text-[#7CB9E8]" : "text-white hover:bg-white/10",
-            )}
+              "flex-1 py-2 text-sm font-medium rounded-md", activeTab === tab ? "bg-white text-[#7CB9E8]" : "text-white hover:bg-white/10",)}
           >
             {tab}
           </button>

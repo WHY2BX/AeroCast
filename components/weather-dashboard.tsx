@@ -9,7 +9,6 @@ import ForecastTable from "./forecast-table"
 import WeatherRecommendation from "./weather-recommendation"
 import AirQualityWarning from "./air-quality-warning"
 
-//Import for API
 
 
 import {useState, useEffect} from "react"
@@ -60,7 +59,7 @@ export default function WeatherDashboard() {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
         <div className="space-y-4">
           <CurrentWeather latitude={location.latitude} longitude={location.longitude} cityName={location.cityName}/>
-          <WeatherMap />
+          <WeatherMap latitude={location.latitude} longitude={location.longitude} />
           <WeatherGraphs />
         </div>
         <div className="space-y-4">

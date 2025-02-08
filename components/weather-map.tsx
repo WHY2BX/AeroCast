@@ -1,23 +1,68 @@
-import { Card } from "@/components/ui/card"
-import Image from "next/image"
+'use Client'
+import { Card } from "@/components/ui/card";
+import {
+  MapContainer,
+  TileLayer,
+  useMap
+} from "react-leaflet";
+import "leaflet/dist/leaflet.css";
+import { LatLngTuple } from "leaflet";
+import { useState, useEffect } from "react";
+import { cn } from "@/lib/utils"
+import { Location } from "@/app/lib/definitions"
 
-export default function WeatherMap() {
+// ใช้ปรับตำเเหน่ง center ของ map ใหม่ตอนผู้ใช้เปลี่ยนสถานที่
+function ChangeMapCenter({ center }: { center: LatLngTuple }) {
+  const map = useMap();
+  useEffect(() => {
+    map.setView(center, map.getZoom());
+  }, [center, map]);
+  return null;
+}
+
+export default function WeatherMap({ latitude, longitude }: Location) {
+  const [map, setMap] = useState('/api/map_temp');
+  const [activeTab, setActiveTab] = useState("temp");
+  const [center, setCenter] = useState<LatLngTuple>([latitude, longitude]);
+
+  useEffect(() => {
+    console.log("Updating center:", latitude, longitude);
+    setCenter([latitude, longitude]);
+    changeMap(1);
+  }, [latitude, longitude]);
+
+
+  
+  const changeMap = async (buttonID:number) =>{
+    try {
+      const res = await fetch(
+        buttonID === 1 ? '/api/map_temp' : buttonID === 2 ? '/api/map_pm2.5' : '/api/map_rain'
+      );
+      const data = await res.json();
+      setMap(data.url);
+      buttonID === 1? setActiveTab('temp') : buttonID === 2 ? setActiveTab('pm'): setActiveTab('rain')
+    } catch (error) {
+      
+    }
+  }
+
   return (
     <Card className="p-4">
       <div className="aspect-[16/9] relative rounded-lg overflow-hidden">
-        <Image
-          src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/image-LpEzssrFctFGjfxuwzRTNZb3lpGvTw.png"
-          alt="Weather map"
-          fill
-          className="object-cover"
-        />
+        <MapContainer center={center} zoom={13} scrollWheelZoom={true} className="h-full w-full">
+          <TileLayer
+            attribution="&copy; <a href='https://www.openstreetmap.org/copyright'>OpenStreetMap</a> contributors"
+            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+          />
+          <TileLayer url={map} />
+          <ChangeMapCenter center={center} />
+        </MapContainer>
       </div>
       <div className="flex gap-2 mt-2">
-        <button className="flex-1 py-1 px-4 rounded bg-[#7CB9E8] text-white text-sm">Temperature</button>
-        <button className="flex-1 py-1 px-4 rounded bg-gray-100 text-gray-600 text-sm">PM2.5</button>
-        <button className="flex-1 py-1 px-4 rounded bg-gray-100 text-gray-600 text-sm">Wind</button>
+        <button className={cn("flex-1 py-1 px-4 rounded text-sm", activeTab === 'temp' ? "bg-[#7CB9E8] text-white" : "bg-gray-100 text-gray-600")} onClick={()=>changeMap(1)}>Temperature</button>
+        <button className={cn("flex-1 py-1 px-4 rounded text-sm", activeTab === 'pm' ? "bg-[#7CB9E8] text-white" : "bg-gray-100 text-gray-600")} onClick={()=>changeMap(2)}>PM2.5</button>
+        <button className={cn("flex-1 py-1 px-4 rounded text-sm", activeTab === 'rain' ? "bg-[#7CB9E8] text-white" : "bg-gray-100 text-gray-600")} onClick={()=>changeMap(3)}>มันคือไรว่ะคุณฝนตกหรอ</button>
       </div>
     </Card>
-  )
+  );
 }
-
