@@ -1,12 +1,12 @@
 import bcrypt from "bcryptjs";
-import user from "@/app/models/User";
-import { connectDB } from "@/app/lib/mongodb";
+import User from "@/app/models/User";
+import connectDB from "@/app/lib/mongodb";
 
-export async function registerUser(email: string, password: string, name: string) {
+export async function registerUser(name: string, email: string, password: string) {
   await connectDB(); // เชื่อมต่อ MongoDB
 
   // ตรวจสอบว่ามีอีเมลนี้อยู่แล้วหรือไม่
-  const existingUser = await user.findOne({ email });
+  const existingUser = await User.findOne({ email });
   if (existingUser) {
     throw new Error("User already exists");
   }
@@ -15,11 +15,12 @@ export async function registerUser(email: string, password: string, name: string
   const hashedPassword = await bcrypt.hash(password, 10);
 
   // สร้างผู้ใช้ใหม่
-  const newUser = await user.create({
+  const newUser = await User.create({
     email,
     password: hashedPassword,
     name,
   });
+  console.log("User to save:", newUser);
 
   return newUser;
 }

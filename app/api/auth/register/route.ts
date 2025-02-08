@@ -1,16 +1,15 @@
 import { NextResponse } from "next/server";
 import { registerUser } from "@/app/lib/register";
-import { connectDB } from "@/app/lib/mongodb";
+import connectDB from "@/app/lib/mongodb";
+import User from '@/app/models/User';
 
 export async function POST(request: Request) {
   try {
-    await connectDB()
     const { name, email, password } = await request.json();
-    console.log({ name, email, password });
+    console.log( {name, email, password} );
     const newUser = await registerUser(name, email, password);
-    await newUser.save()
-    return NextResponse.json({ success: true, user: newUser });
+    return NextResponse.json(newUser, {status:201})
   } catch (error) {
     return NextResponse.json({ success: false, message: error.message }, { status: 400 });
   }
-}
+} 

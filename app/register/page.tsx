@@ -15,7 +15,8 @@ export default function RegisterPage() {
 
 
     try {
-      const response = await axios.post('/api/auth/register',{userData})
+      console.log("Sending userData:", userData);
+      const response = await axios.post('/api/auth/register',userData)
     } catch (err) {
       setError((err as Error).message);
     }
