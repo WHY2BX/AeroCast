@@ -4,12 +4,11 @@ import Input from "@/components/input"
 import SearchResultList from "@/components/searchResult"
 import { useState } from "react"
 import { signIn, signOut, useSession } from "next-auth/react";
+import {SearchProps} from "@/app/lib/definitions"
 
-interface InputProps {
-  setLocation: (value: { latitude: number; longitude: number; cityName: string }) => void;
-}
 
-export default function Header({ setLocation }: InputProps) {
+
+export default function Header({ setLocation }: SearchProps) {
   const [searchResult, setSearchResult] = useState<any>(null)
   const [search, setSearch] = useState("")
   const { data: session } = useSession();

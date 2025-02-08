@@ -1,12 +1,7 @@
-interface SearchResultListProps {
+import {SearchProps} from "@/app/lib/definitions"
 
-  results: any;
 
-  setLocation: (value: { latitude: number; longitude: number; cityName: string }) => void;
-  setSearchResult: (value: string) => void;
-  setSearch: (value: string) => void;
-}
-export default function SearchResultList({ results, setLocation, setSearchResult, setSearch }: SearchResultListProps) {
+export default function SearchResultList({ results, setLocation, setSearchResult, setSearch }: SearchProps) {
 
   function selectLocation(latitude: number, longitude: number, cityName: string) {
     const location = ({
