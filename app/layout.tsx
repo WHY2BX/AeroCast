@@ -3,9 +3,9 @@ import "./globals.css";
 import Providers from "./client-layout"; // 👈 import Providers
 
 export const metadata: Metadata = {
-  title: "v0 App",
-  description: "Created with v0",
-};
+  title: 'AeroCast',
+  description: 'Weather & Pm2.5 checking website',
+}
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
