@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { signIn } from "next-auth/react";
+import axios from 'axios';
 
 export default function RegisterPage() {
   const [userData, setUserData] = useState({ name: "", email: "", password: "" });
@@ -11,18 +11,12 @@ export default function RegisterPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError("");
+    setError(""); 
+
 
     try {
-      const res = await fetch("/api/auth/register", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(userData),
-      });
-
-      if (!res.ok) throw new Error("Registration failed");
-      alert("Registration successful! Please log in.");
-      router.push("/login");
+      console.log("Sending userData:", userData);
+      const response = await axios.post('/api/auth/register',userData)
     } catch (err) {
       setError((err as Error).message);
     }

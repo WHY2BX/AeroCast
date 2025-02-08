@@ -53,7 +53,7 @@ export default function Header({ setLocation }: SearchProps) {
               Login
             </button>
             <button
-              onClick={() => signIn("google")}
+              onClick={() => router.push("/register")}
               className="px-3 py-1 text-sm bg-[#7CB9E8] text-white rounded-md hover:bg-[#5A99C2]"
             >
               Register

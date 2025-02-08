@@ -28,7 +28,7 @@ export default function ForecastTable({ latitude, longitude }: Location) {
         <div className="grid grid-cols-3 text-sm text-muted-foreground">
           <div>Date</div>
           <div>Weather</div>
-          <div>Temperature (max-min)</div>
+          <div>Temperature (min-max)</div>
         </div>
         {forecast.map((fore: any) => (
           <div key={fore.dt} className="grid grid-cols-3 text-sm">
@@ -36,7 +36,7 @@ export default function ForecastTable({ latitude, longitude }: Location) {
             <div>
             <div>{fore.weather[0].main} <img src={`https://openweathermap.org/img/wn/${fore.weather[0].icon}.png`} className="inline-block" /></div>
             </div>
-            <div>{fore.temp.max} - {fore.temp.min}</div>
+            <div>{(fore.temp.min - 273).toFixed(2)}°C - {(fore.temp.max - 273).toFixed(2)}°C</div>
           </div>
         ))}
       </div>
