@@ -3,7 +3,8 @@
 import { useEffect, useState } from "react";
 import { MapPin } from "lucide-react";
 import { Card } from "@/components/ui/card";
-import { Location } from "@/app/lib/definitions"
+import { WeatherProps } from "@/app/lib/definitions"
+
 
 export default function CurrentWeather({ latitude, longitude, cityName }: Location) {
   const [weather, setWeather] = useState<any>(null);

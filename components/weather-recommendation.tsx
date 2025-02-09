@@ -1,57 +1,33 @@
 import { CloudRain } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { useEffect, useState } from "react";
-import { Location } from "@/app/lib/definitions";
+import { WeatherProps,PmData } from "@/app/lib/definitions";
 
-export default function WeatherRecommendation({
-  latitude,
-  longitude,
-}: Location) {
-  const [weather, setWeather] = useState<any>(null);
-  const [loading, setLoading] = useState(true);
-  const [pm, setPM] = useState<any>(null);
-  const [quality, setQuality] = useState({ state: "Good", img: "" });
+export default function WeatherRecommendation({ weather, pm }: { weather: WeatherProps, pm: PmData }) {
+
+  const [quality, setQuality] = useState("");
 
   useEffect(() => {
-    async function fetchWeather() {
-      try {
-        const res = await fetch(
-          `/api/weather?lat=${latitude}&lon=${longitude}`
-        );
-        const data = await res.json();
-        setWeather(data);
-      } catch (error) {
-        console.error("Error fetching weather:", error);
-      } finally {
-        setLoading(false);
-      }
+   
+    const pm2_5 = pm?.components.pm2_5;
+    if (pm2_5 >= 0 && pm2_5 <= 10) {
+      setQuality("Good");
+    } else if (pm2_5 > 10 && pm2_5 <= 25) {
+      setQuality("Fair");
+    } else if (pm2_5 > 25 && pm2_5 <= 50) {
+      setQuality("Moderate");
+    } else if (pm2_5 > 50 && pm2_5 <= 75) {
+      setQuality("Poor");
+    } else {
+      setQuality("Very Poor");
     }
-    fetchWeather();
-    async function fetchPM() {
-      const res = await fetch(`/api/pm2.5?lat=${latitude}&lon=${longitude}`);
-      const data = await res.json();
-      setPM(data.list[0]);
-      console.log(data.list[0]);
-      const pm2_5 = data.list[0]?.components?.pm2_5;
-      pm2_5 >= 0 && pm2_5 <= 10
-        ? setQuality({ state: "Good", img: "" })
-        : pm2_5 > 10 && pm2_5 <= 25
-        ? setQuality({ state: "Fair", img: "" })
-        : pm2_5 > 25 && pm2_5 <= 50
-        ? setQuality({ state: "Moderate", img: "" })
-        : pm2_5 > 50 && pm2_5 <= 75
-        ? setQuality({ state: "Poor", img: "" })
-        : setQuality({ state: "Very Poor", img: "" });
-    }
-    fetchPM();
-  }, [latitude, longitude]);
+  }, [pm]);
 
-  if (loading) return <p>Loading...</p>;
 
   const humidity = weather?.main?.humidity;
   const isRainy: boolean =
     weather?.weather?.[0]?.main.includes("Rain") || weather?.pop > 0.5;
-  const isPM = quality.state === "Poor" || quality.state === "Very Poor";
+  const isPM = quality === "Poor" || quality === "Very Poor";
 
   const isSunny: boolean =
     (weather?.weather[0]?.main === "Clear" ||

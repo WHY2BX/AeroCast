@@ -1,6 +1,6 @@
 import { Card } from "@/components/ui/card";
 import { useState, useEffect } from "react";
-import { Location } from "@/app/lib/definitions";
+import { PmData } from "@/app/lib/definitions";
 import { cn } from "@/lib/utils";
 
 export default function AirQualityWarning({ latitude, longitude }: Location) {
@@ -45,17 +45,16 @@ export default function AirQualityWarning({ latitude, longitude }: Location) {
         <img src="รูปจ้า" alt="" />
 
         <div>
-          {/* <div className="text-3xl font-bold text-red-500"> */}
           <div
             className={cn(
               "text-3xl font-bold",
-              quality.state === "Good"
+              state === "Good"
                 ? "text-green-500"
-                : quality.state === "Fair"
+                : state === "Fair"
                 ? "text-yellow-500"
-                : quality.state === "Moderate"
+                : state === "Moderate"
                 ? "text-orange-500"
-                : quality.state === "Poor"
+                : state === "Poor"
                 ? "text-red-500"
                 : "text-purple-500"
             )}
@@ -66,18 +65,18 @@ export default function AirQualityWarning({ latitude, longitude }: Location) {
           <div
             className={cn(
               "text-3xl font-bold",
-              quality.state === "Good"
+              state === "Good"
                 ? "text-green-500"
-                : quality.state === "Fair"
+                : state === "Fair"
                 ? "text-yellow-500"
-                : quality.state === "Moderate"
+                : state === "Moderate"
                 ? "text-orange-500"
-                : quality.state === "Poor"
+                : state === "Poor"
                 ? "text-red-500"
                 : "text-purple-500"
             )}
           >
-            {quality.state}
+            {state}
           </div>
         </div>
       </div>

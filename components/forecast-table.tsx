@@ -47,7 +47,7 @@ export default function ForecastTable({ latitude, longitude }: Location) {
             <div>
             <div>{fore.weather[0].main} <img src={`https://openweathermap.org/img/wn/${fore.weather[0].icon}.png`} className="inline-block" /></div>
             </div>
-            <div>{(fore.temp.min - 273).toFixed(2)}°C - {(fore.temp.max - 273).toFixed(2)}°C</div>
+            <div>{(fore.temp.min - 273).toFixed(2)}°C , {(fore.temp.max - 273).toFixed(2)}°C</div>
           </div>
         ))}
       </div>
