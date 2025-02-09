@@ -64,8 +64,8 @@ export default function WeatherDashboard() {
         </div>
         <div className="space-y-4">
           <WeatherRecommendation />
-          <ForecastTable />
-          <AirQualityWarning />
+          <ForecastTable latitude={location.latitude} longitude={location.longitude}/>
+          <AirQualityWarning latitude={location.latitude} longitude={location.longitude} />
         </div>
       </div>
     </div>
