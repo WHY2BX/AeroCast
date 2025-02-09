@@ -6,12 +6,15 @@ import { useState } from "react"
 import { signIn, signOut, useSession } from "next-auth/react";
 import {SearchProps} from "@/app/lib/definitions"
 
+import { useRouter } from "next/navigation";  
 
 
 export default function Header({ setLocation }: SearchProps) {
   const [searchResult, setSearchResult] = useState<any>(null)
   const [search, setSearch] = useState("")
   const { data: session } = useSession();
+  const router = useRouter();
+  
   return (
     <header className="flex items-center justify-between py-4">
       {/* Logo */}
@@ -47,7 +50,7 @@ export default function Header({ setLocation }: SearchProps) {
         ) : (
           <>
             <button
-              onClick={() => signIn("google")}
+              onClick={() => router.push("/login")}
               className="px-3 py-1 text-sm border border-gray-300 rounded-md hover:bg-gray-100"
             >
               Login
