@@ -4,8 +4,10 @@ import { useState, useEffect } from "react"
 
 export default function ForecastTable({ latitude, longitude }: Location) {
   const [forecast, setForecast] = useState<any>([]);
+  const [loading, setLoading] = useState(true);
   useEffect(() =>
   {
+    setLoading(true);
     async function fetchForecast() {
       try {
         const res = await fetch(`/api/forecast?lat=${latitude}&lon=${longitude}`)
@@ -15,11 +17,20 @@ export default function ForecastTable({ latitude, longitude }: Location) {
       } catch (error) {
         console.log(error)
       }
+      setLoading(false);
     }
     fetchForecast()
 
   },[latitude, longitude])
 
+  if (loading) {
+    return (
+      <div className="skeleton space-y-4">
+        <div className="skeleton-title"></div>
+        <div className="skeleton-line"></div>
+      </div>
+    );
+  }
 
   return (
     <Card className="p-4">

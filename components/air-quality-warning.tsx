@@ -6,7 +6,10 @@ import { cn } from "@/lib/utils";
 export default function AirQualityWarning({ latitude, longitude }: Location) {
   const [pm, setPM] = useState<any>(null);
   const [quality, setQuality] = useState({ state: "Good", img: "" });
+  const [loading, setLoading] = useState(true);
+
   useEffect(() => {
+    setLoading(true);
     async function fetchPM() {
       const res = await fetch(`/api/pm2.5?lat=${latitude}&lon=${longitude}`);
       const data = await res.json();
@@ -23,8 +26,18 @@ export default function AirQualityWarning({ latitude, longitude }: Location) {
         ? setQuality({ state: "Poor", img: "" })
         : setQuality({ state: "Very Poor", img: "" });
     }
+    setLoading(false);
     fetchPM();
   }, [latitude, longitude]);
+
+  if (loading) {
+    return (
+      <div className="skeleton space-y-4">
+        <div className="skeleton-title"></div>
+        <div className="skeleton-line"></div>
+      </div>
+    );
+  }
   return (
     <Card className="p-4">
       <h3 className="text-sm font-medium mb-4">PM2.5 State</h3>

@@ -10,6 +10,7 @@ import { LatLngTuple } from "leaflet";
 import { useState, useEffect } from "react";
 import { cn } from "@/lib/utils"
 import { Location } from "@/app/lib/definitions"
+import Skeleton from "./Skeleton";
 
 // ใช้ปรับตำเเหน่ง center ของ map ใหม่ตอนผู้ใช้เปลี่ยนสถานที่
 function ChangeMapCenter({ center }: { center: LatLngTuple }) {
@@ -25,12 +26,15 @@ export default function WeatherMap({ latitude, longitude }: Location) {
   const [activeTab, setActiveTab] = useState("temp");
   const [center, setCenter] = useState<LatLngTuple>([latitude, longitude]);
 
+  const [loading, setLoading] = useState(true);
+
   useEffect(() => {
+    setLoading(true);
     console.log("Updating center:", latitude, longitude);
     setCenter([latitude, longitude]);
     changeMap(1);
+    setLoading(false);
   }, [latitude, longitude]);
-
 
   
   const changeMap = async (buttonID:number) =>{
@@ -44,6 +48,15 @@ export default function WeatherMap({ latitude, longitude }: Location) {
     } catch (error) {
       
     }
+  }
+  
+  if (loading) {
+    return (
+      <div className="skeleton space-y-4">
+        <div className="skeleton-title"></div>
+        <div className="skeleton-line"></div>
+      </div>
+    );
   }
 
   return (

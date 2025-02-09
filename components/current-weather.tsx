@@ -10,6 +10,7 @@ export default function CurrentWeather({ latitude, longitude, cityName }: Locati
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    setLoading(true);
     async function fetchWeather() {
       try {
         const res = await fetch(`/api/weather?lat=${latitude}&lon=${longitude}`);
@@ -25,7 +26,14 @@ export default function CurrentWeather({ latitude, longitude, cityName }: Locati
     fetchWeather();
   }, [latitude, longitude]);
 
-  if (loading) return <p>Loading...</p>;
+  if (loading) {
+    return (
+      <div className="skeleton space-y-4">
+        <div className="skeleton-title"></div>
+        <div className="skeleton-line"></div>
+      </div>
+    );
+  }
 
 
 
