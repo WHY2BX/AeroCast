@@ -1,27 +1,11 @@
 import { Card } from "@/components/ui/card"
 import {Location} from "@/app/lib/definitions"
 import { useState, useEffect } from "react"
+import {ForecastProps} from "@/app/lib/definitions"
 
-export default function ForecastTable({ latitude, longitude }: Location) {
-  const [forecast, setForecast] = useState<any>([]);
-  const [loading, setLoading] = useState(true);
-  useEffect(() =>
-  {
-    setLoading(true);
-    async function fetchForecast() {
-      try {
-        const res = await fetch(`/api/forecast?lat=${latitude}&lon=${longitude}`)
-        const data = await res.json()
-        setForecast(data.list || [])
-        console.log(forecast)
-      } catch (error) {
-        console.log(error)
-      }
-      setLoading(false);
-    }
-    fetchForecast()
+export default function ForecastTable({forecast, loading}:{forecast:ForecastProps, loading:boolean}) {
 
-  },[latitude, longitude])
+
 
   if (loading) {
     return (

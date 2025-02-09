@@ -18,6 +18,7 @@ export default function WeatherDashboard() {
   const [weather, setWeather] = useState<any>(null);
   const [forecast, setForecast] = useState<any>([]);
   const [pm, setPM] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     getLocation();
@@ -38,6 +39,7 @@ export default function WeatherDashboard() {
 
     };
     fetchWeatherData();
+    setLoading(false)
   }, [location]);
 
   function getLocation() {
@@ -73,14 +75,14 @@ export default function WeatherDashboard() {
       <Navigation />
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
         <div className="space-y-4">
-          <CurrentWeather weather={weather} cityName={location.cityName} />
+          <CurrentWeather weather={weather} cityName={location.cityName} loading={loading} />
           <WeatherMap latitude={location.latitude} longitude={location.longitude} />
           <WeatherGraphs />
         </div>
         <div className="space-y-4">
           <WeatherRecommendation weather={weather} pm={pm} />
-          <ForecastTable forecast={forecast} />
-          <AirQualityWarning pm={pm}/>
+          <ForecastTable forecast={forecast}loading={loading} />
+          <AirQualityWarning pm={pm} loading={loading}/>
         </div>
       </div>
     </div>

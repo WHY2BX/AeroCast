@@ -74,7 +74,7 @@ export default function WeatherMap({ latitude, longitude }: Location) {
       <div className="flex gap-2 mt-2">
         <button className={cn("flex-1 py-1 px-4 rounded text-sm", activeTab === 'temp' ? "bg-[#7CB9E8] text-white" : "bg-gray-100 text-gray-600")} onClick={()=>changeMap(1)}>Temperature</button>
         <button className={cn("flex-1 py-1 px-4 rounded text-sm", activeTab === 'pm' ? "bg-[#7CB9E8] text-white" : "bg-gray-100 text-gray-600")} onClick={()=>changeMap(2)}>PM2.5</button>
-        <button className={cn("flex-1 py-1 px-4 rounded text-sm", activeTab === 'rain' ? "bg-[#7CB9E8] text-white" : "bg-gray-100 text-gray-600")} onClick={()=>changeMap(3)}>มันคือไรว่ะคุณฝนตกหรอ</button>
+        <button className={cn("flex-1 py-1 px-4 rounded text-sm", activeTab === 'rain' ? "bg-[#7CB9E8] text-white" : "bg-gray-100 text-gray-600")} onClick={()=>changeMap(3)}>Accumulated precipitation rain</button>
       </div>
     </Card>
   );

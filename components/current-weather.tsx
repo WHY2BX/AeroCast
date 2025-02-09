@@ -6,26 +6,10 @@ import { Card } from "@/components/ui/card";
 import { WeatherProps } from "@/app/lib/definitions"
 
 
-export default function CurrentWeather({ latitude, longitude, cityName }: Location) {
-  const [weather, setWeather] = useState<any>(null);
-  const [loading, setLoading] = useState(true);
+export default function CurrentWeather({ weather, cityName, loading }: { weather: WeatherProps, cityName: string, loading:boolean }) {
 
-  useEffect(() => {
-    setLoading(true);
-    async function fetchWeather() {
-      try {
-        const res = await fetch(`/api/weather?lat=${latitude}&lon=${longitude}`);
-        const data = await res.json();
-        setWeather(data);
-      } catch (error) {
-        console.error("Error fetching weather:", error);
-      } finally {
-        setLoading(false);
-      }
 
-    }
-    fetchWeather();
-  }, [latitude, longitude]);
+
 
   if (loading) {
     return (

@@ -3,32 +3,27 @@ import { useState, useEffect } from "react";
 import { PmData } from "@/app/lib/definitions";
 import { cn } from "@/lib/utils";
 
-export default function AirQualityWarning({ latitude, longitude }: Location) {
-  const [pm, setPM] = useState<any>(null);
-  const [quality, setQuality] = useState({ state: "Good", img: "" });
-  const [loading, setLoading] = useState(true);
+export default function AirQualityWarning({ pm, loading }: {pm:PmData, loading:boolean}) {
+  const [state, setState] = useState("Good");
+
 
   useEffect(() => {
-    setLoading(true);
     async function fetchPM() {
-      const res = await fetch(`/api/pm2.5?lat=${latitude}&lon=${longitude}`);
-      const data = await res.json();
-      setPM(data.list[0]);
-      console.log(data.list[0]);
-      const pm2_5 = data.list[0]?.components?.pm2_5;
-      pm2_5 >= 0 && pm2_5 <= 10
-        ? setQuality({ state: "Good", img: "" })
-        : pm2_5 > 10 && pm2_5 <= 25
-        ? setQuality({ state: "Fair", img: "" })
-        : pm2_5 > 25 && pm2_5 <= 50
-        ? setQuality({ state: "Moderate", img: "" })
-        : pm2_5 > 50 && pm2_5 <= 75
-        ? setQuality({ state: "Poor", img: "" })
-        : setQuality({ state: "Very Poor", img: "" });
+      const pm2_5 = pm?.components.pm2_5;
+      if (pm2_5 >= 0 && pm2_5 <= 10) {
+        setState("Good");
+      } else if (pm2_5 > 10 && pm2_5 <= 25) {
+        setState("Fair");
+      } else if (pm2_5 > 25 && pm2_5 <= 50) {
+        setState("Moderate");
+      } else if (pm2_5 > 50 && pm2_5 <= 75) {
+        setState("Poor");
+      } else {
+        setState("Very Poor");
+      }
     }
-    setLoading(false);
     fetchPM();
-  }, [latitude, longitude]);
+  }, [pm]);
 
   if (loading) {
     return (
@@ -51,12 +46,12 @@ export default function AirQualityWarning({ latitude, longitude }: Location) {
               state === "Good"
                 ? "text-green-500"
                 : state === "Fair"
-                ? "text-yellow-500"
-                : state === "Moderate"
-                ? "text-orange-500"
-                : state === "Poor"
-                ? "text-red-500"
-                : "text-purple-500"
+                  ? "text-yellow-500"
+                  : state === "Moderate"
+                    ? "text-orange-500"
+                    : state === "Poor"
+                      ? "text-red-500"
+                      : "text-purple-500"
             )}
           >
             {pm?.components?.pm2_5} μg/m3
@@ -68,12 +63,12 @@ export default function AirQualityWarning({ latitude, longitude }: Location) {
               state === "Good"
                 ? "text-green-500"
                 : state === "Fair"
-                ? "text-yellow-500"
-                : state === "Moderate"
-                ? "text-orange-500"
-                : state === "Poor"
-                ? "text-red-500"
-                : "text-purple-500"
+                  ? "text-yellow-500"
+                  : state === "Moderate"
+                    ? "text-orange-500"
+                    : state === "Poor"
+                      ? "text-red-500"
+                      : "text-purple-500"
             )}
           >
             {state}
