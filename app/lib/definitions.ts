@@ -12,3 +12,43 @@ export type Location = {
     results?: any;
   }
   
+
+  export interface WeatherProps {
+    wind: any;
+    main: any;
+    weather: {
+      main: {
+        temp: number;
+        temp_max: number;
+        temp_min: number;
+        humidity: number;
+        feels_like: number;
+      };
+      weather: {
+        main: string;
+      }[];
+      wind: {
+        speed: number;
+      };
+    };
+  }
+
+  export interface ForecastProps {
+    forecast: Array<{
+      dt: number;
+      weather: Array<{
+        main: string;
+        icon: string;
+      }>;
+      temp: {
+        min: number;
+        max: number;
+      };
+    }>;
+  }
+  
+  interface PmData {
+    components: {
+      pm2_5: number;
+    };
+  }
