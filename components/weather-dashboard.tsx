@@ -1,20 +1,26 @@
 "use client";
 
-import Header from "./header"
-import Navigation from "./navigation"
-import CurrentWeather from "./current-weather"
-import WeatherMap from "./weather-map"
-import WeatherGraphs from "./weather-graphs"
-import ForecastTable from "./forecast-table"
-import WeatherRecommendation from "./weather-recommendation"
-import AirQualityWarning from "./air-quality-warning"
-import { fetchWeather, fetchForecast, fetchPM } from "@/app/lib/fetchAPI"
+import Header from "./header";
+import Navigation from "./navigation";
+import CurrentWeather from "./current-weather";
+import WeatherMap from "./weather-map";
+import WeatherGraphs from "./weather-graphs";
+import ForecastTable from "./forecast-table";
+import WeatherRecommendation from "./weather-recommendation";
+import AirQualityWarning from "./air-quality-warning";
+import { fetchWeather, fetchForecast, fetchPM } from "@/app/lib/fetchAPI";
 
+import { Suspense } from "react";
+import { RevenueChartSkeleton } from "@/app/ui/skeletons";
 
-
-import { useState, useEffect } from "react"
+import { useState, useEffect } from "react";
+import { CardsSkeleton } from "./ui/skeleton";
 export default function WeatherDashboard() {
-  const [location, setLocation] = useState({ latitude: 13.736717, longitude: 100.523186, cityName: "Bangkok" });
+  const [location, setLocation] = useState({
+    latitude: 13.736717,
+    longitude: 100.523186,
+    cityName: "Bangkok",
+  });
   const [weather, setWeather] = useState<any>(null);
   const [forecast, setForecast] = useState<any>([]);
   const [pm, setPM] = useState<any>(null);
@@ -22,24 +28,30 @@ export default function WeatherDashboard() {
 
   useEffect(() => {
     getLocation();
-  }, [])
-
+  }, []);
 
   useEffect(() => {
     const fetchWeatherData = async () => {
-      const weatherData = await fetchWeather({ latitude: location.latitude, longitude: location.longitude });
-      setWeather(weatherData)
+      const weatherData = await fetchWeather({
+        latitude: location.latitude,
+        longitude: location.longitude,
+      });
+      setWeather(weatherData);
 
-      const forecastData = await fetchForecast({ latitude: location.latitude, longitude: location.longitude })
-      setForecast(forecastData.list)
+      const forecastData = await fetchForecast({
+        latitude: location.latitude,
+        longitude: location.longitude,
+      });
+      setForecast(forecastData.list);
 
-      const pmData = await fetchPM({latitude: location.latitude, longitude: location.longitude})
-      setPM(pmData)
-  
-
+      const pmData = await fetchPM({
+        latitude: location.latitude,
+        longitude: location.longitude,
+      });
+      setPM(pmData);
     };
     fetchWeatherData();
-    setLoading(false)
+    setLoading(false);
   }, [location]);
 
   function getLocation() {
@@ -48,12 +60,12 @@ export default function WeatherDashboard() {
       return;
     }
 
-    navigator.geolocation.getCurrentPosition(successGet)
+    navigator.geolocation.getCurrentPosition(successGet);
   }
 
   async function successGet(position: GeolocationPosition) {
-    const lat = position.coords.latitude
-    const lon = position.coords.longitude
+    const lat = position.coords.latitude;
+    const lon = position.coords.longitude;
     const geoRes = await fetch(`/api/location?lat=${lat}&lon=${lon}`);
     const geoData = await geoRes.json();
     console.log(geoData)
@@ -65,9 +77,8 @@ export default function WeatherDashboard() {
       }
     )
 
-    setLocation(locate)
+    setLocation(locate);
   }
-
 
   return (
     <div className="max-w-7xl mx-auto p-4">
@@ -75,16 +86,35 @@ export default function WeatherDashboard() {
       <Navigation />
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
         <div className="space-y-4">
-          <CurrentWeather weather={weather} cityName={location.cityName} loading={loading} />
-          <WeatherMap latitude={location.latitude} longitude={location.longitude} />
-          <WeatherGraphs />
+          <Suspense fallback={<CardsSkeleton />}>
+            <CurrentWeather
+              weather={weather}
+              cityName={location.cityName}
+              loading={loading}
+            />
+          </Suspense>
+          <Suspense fallback={<CardsSkeleton />}>
+            <WeatherMap
+              latitude={location.latitude}
+              longitude={location.longitude}
+            />
+          </Suspense>
+          <Suspense fallback={<CardsSkeleton />}>
+            <WeatherGraphs />
+          </Suspense>
         </div>
         <div className="space-y-4">
-          <WeatherRecommendation weather={weather} pm={pm} />
-          <ForecastTable forecast={forecast}loading={loading} />
-          <AirQualityWarning pm={pm} loading={loading}/>
+          <Suspense fallback={<CardsSkeleton />}>
+            <WeatherRecommendation weather={weather} pm={pm} />
+          </Suspense>
+          <Suspense fallback={<CardsSkeleton />}>
+            <ForecastTable forecast={forecast} loading={loading} />
+          </Suspense>
+          <Suspense fallback={<CardsSkeleton />}>
+            <AirQualityWarning pm={pm} loading={loading} />
+          </Suspense>
         </div>
       </div>
     </div>
-  )
+  );
 }
