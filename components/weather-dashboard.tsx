@@ -95,15 +95,14 @@ export default function WeatherDashboard() {
     const lon = position.coords.longitude;
     const geoRes = await fetch(`/api/location?lat=${lat}&lon=${lon}`);
     const geoData = await geoRes.json();
-    const locate = {
-      latitude: lat,
-      longitude: lon,
-      cityName:
-        geoData.address?.suburb ||
-        geoData.address?.city ||
-        geoData.address?.village ||
-        "Unknown Location",
-    };
+    console.log(geoData)
+    const locate = (
+      {
+        latitude: lat,
+        longitude: lon,
+        cityName: geoData.address?.suburb || geoData.address?.city || geoData.address?.village || "Unknown Location"
+      }
+    )
 
     setLocation(locate);
   }
