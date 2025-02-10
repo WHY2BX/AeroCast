@@ -10,7 +10,6 @@ import { LatLngTuple } from "leaflet";
 import { useState, useEffect } from "react";
 import { cn } from "@/lib/utils"
 import { Location } from "@/app/lib/definitions"
-import Skeleton from "./Skeleton";
 
 // ใช้ปรับตำเเหน่ง center ของ map ใหม่ตอนผู้ใช้เปลี่ยนสถานที่
 function ChangeMapCenter({ center }: { center: LatLngTuple }) {
