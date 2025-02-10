@@ -27,7 +27,7 @@ return (
       <div className="space-y-4">
         <div className="flex items-center gap-2">
           <MapPin className="h-5 w-5 text-muted-foreground" />
-          <h2 className="text-lg font-medium">{cityName}</h2>
+          <h2 className="text-lg font-medium">{cityName}, {weather?.sys?.country}</h2>
         </div>
 
         <div className="grid grid-cols-2 gap-4">

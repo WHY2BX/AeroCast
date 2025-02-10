@@ -56,7 +56,7 @@ export default function WeatherDashboard() {
     const lon = position.coords.longitude
     const geoRes = await fetch(`/api/location?lat=${lat}&lon=${lon}`);
     const geoData = await geoRes.json();
-    // console.log(geoData.address)
+    console.log(geoData)
     const locate = (
       {
         latitude: lat,

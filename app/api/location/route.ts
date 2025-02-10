@@ -8,9 +8,7 @@ export async function GET(req: Request) {
   if (!lat || !lon) {
     return NextResponse.json({ error: "Invalid coordinates" }, { status: 400 });
   }
-
   const url = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}&accept-language=en`;
-
   try {
     const response = await fetch(url);
     if (!response.ok) {
