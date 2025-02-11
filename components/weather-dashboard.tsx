@@ -1,7 +1,8 @@
-'use client'
-import { fetchForecast, fetchPM, fetchWeather } from "@/app/lib/fetchAPI";
+'use client';
+
 import { useEffect, useState } from "react";
-import { CardSkeleton, ForecastSkeleton } from "./ui/skeleton";
+import { fetchForecast, fetchPM, fetchWeather } from "@/app/lib/fetchAPI";
+
 import CurrentWeather from "./current-weather";
 import Header from "./header";
 import Navigation from "./navigation";
@@ -10,8 +11,11 @@ import WeatherGraphs from "./weather-graphs";
 import WeatherRecommendation from "./weather-recommendation";
 import ForecastTable from "./forecast-table";
 import AirQualityWarning from "./air-quality-warning";
+import FavoriteLocations from "./favorite-locations"; // สร้างไฟล์นี้
+import { CardSkeleton, ForecastSkeleton } from "./ui/skeleton";
 
 export default function WeatherDashboard() {
+  const [activeTab, setActiveTab] = useState("Today"); // 👈 เพิ่ม state สำหรับแท็บ
   const [location, setLocation] = useState({
     latitude: 13.736717,
     longitude: 100.523186,
@@ -20,8 +24,6 @@ export default function WeatherDashboard() {
   const [weather, setWeather] = useState<any>(null);
   const [forecast, setForecast] = useState<any>([]);
   const [pm, setPM] = useState<any>(null);
-
-  // Loading states
   const [loadingWeather, setLoadingWeather] = useState(true);
   const [loadingForecast, setLoadingForecast] = useState(true);
   const [loadingPM, setLoadingPM] = useState(true);
@@ -86,7 +88,6 @@ export default function WeatherDashboard() {
       console.error("Geolocation is not supported by your browser");
       return;
     }
-
     navigator.geolocation.getCurrentPosition(successGet);
   }
 
@@ -95,57 +96,53 @@ export default function WeatherDashboard() {
     const lon = position.coords.longitude;
     const geoRes = await fetch(`/api/location?lat=${lat}&lon=${lon}`);
     const geoData = await geoRes.json();
-    console.log(geoData)
-    const locate = (
-      {
-        latitude: lat,
-        longitude: lon,
-        cityName: geoData.address?.suburb || geoData.address?.city || geoData.address?.village || "Unknown Location"
-      }
-    )
-
-    setLocation(locate);
+    setLocation({
+      latitude: lat,
+      longitude: lon,
+      cityName:
+        geoData.address?.suburb ||
+        geoData.address?.city ||
+        geoData.address?.village ||
+        "Unknown Location",
+    });
   }
 
   return (
     <div className="max-w-7xl mx-auto p-4">
       <Header setLocation={setLocation} />
-      <Navigation />
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
-        <div className="space-y-4">
-          {loadingWeather ? (
-            <CardSkeleton />
-          ) : (
-            <CurrentWeather
-              weather={weather}
-              cityName={location.cityName}
-              loading={loadingWeather}
-            />
-          )}
+      <Navigation activeTab={activeTab} setActiveTab={setActiveTab} />
 
-          <WeatherMap
-            latitude={location.latitude}
-            longitude={location.longitude}
-          />
-
-          <WeatherGraphs />
+      {/* แสดงเนื้อหาตามแท็บที่เลือก */}
+      {activeTab === "Today" && (
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+          <div className="space-y-4">
+            {loadingWeather ? (
+              <CardSkeleton />
+            ) : (
+              <CurrentWeather
+                weather={weather}
+                cityName={location.cityName}
+                loading={loadingWeather}
+              />
+            )}
+            <WeatherMap latitude={location.latitude} longitude={location.longitude} />
+            <WeatherGraphs />
+          </div>
+          <div className="space-y-4">
+            <WeatherRecommendation weather={weather} pm={pm} />
+            {loadingForecast ? (
+              <ForecastSkeleton />
+            ) : (
+              <ForecastTable forecast={forecast} loading={loadingForecast} />
+            )}
+            {loadingPM ? <ForecastSkeleton /> : <AirQualityWarning pm={pm} loading={loadingPM} />}
+          </div>
         </div>
-        <div className="space-y-4">
-          <WeatherRecommendation weather={weather} pm={pm} />
+      )}
 
-          {loadingForecast ? (
-            <ForecastSkeleton />
-          ) : (
-            <ForecastTable forecast={forecast} loading={loadingForecast} />
-          )}
+      {activeTab === "Favorite" && <FavoriteLocations weather={weather}/>} {/* 👈 แสดงคอนเทนต์ Favorite */}
 
-          {loadingPM ? (
-            <ForecastSkeleton />
-          ) : (
-            <AirQualityWarning pm={pm} loading={loadingPM} />
-          )}
-        </div>
-      </div>
+      {activeTab === "Graph" && <WeatherGraphs />} {/* 👈 แสดงคอนเทนต์ Graph */}
     </div>
   );
 }
