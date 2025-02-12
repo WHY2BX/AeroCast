@@ -1,17 +1,19 @@
-'use Client'
+'use client'
+
+import dynamic from 'next/dynamic';
+
+// ลบการ import ของ react-leaflet แบบปกติ และแทนที่ด้วยการ import แบบ dynamic
+const MapContainer = dynamic(() => import('react-leaflet').then(mod => mod.MapContainer), { ssr: false });
+const TileLayer = dynamic(() => import('react-leaflet').then(mod => mod.TileLayer), { ssr: false });
+import { useMap } from 'react-leaflet';
 import { Card } from "@/components/ui/card";
-import {
-  MapContainer,
-  TileLayer,
-  useMap
-} from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import { LatLngTuple } from "leaflet";
 import { useState, useEffect } from "react";
-import { cn } from "@/lib/utils"
-import { Location } from "@/app/lib/definitions"
+import { cn } from "@/lib/utils";
+import { Location } from "@/app/lib/definitions";
 
-// ใช้ปรับตำเเหน่ง center ของ map ใหม่ตอนผู้ใช้เปลี่ยนสถานที่
+// ใช้ปรับตำแหน่ง center ของ map ใหม่ตอนผู้ใช้เปลี่ยนสถานที่
 function ChangeMapCenter({ center }: { center: LatLngTuple }) {
   const map = useMap();
   useEffect(() => {
@@ -35,20 +37,19 @@ export default function WeatherMap({ latitude, longitude }: Location) {
     setLoading(false);
   }, [latitude, longitude]);
 
-  
-  const changeMap = async (buttonID:number) =>{
+  const changeMap = async (buttonID:number) => {
     try {
       const res = await fetch(
         buttonID === 1 ? '/api/map_temp' : buttonID === 2 ? '/api/map_pm2.5' : '/api/map_rain'
       );
       const data = await res.json();
       setMap(data.url);
-      buttonID === 1? setActiveTab('temp') : buttonID === 2 ? setActiveTab('pm'): setActiveTab('rain')
+      buttonID === 1? setActiveTab('temp') : buttonID === 2 ? setActiveTab('pm'): setActiveTab('rain');
     } catch (error) {
-      
+      console.error(error);
     }
-  }
-  
+  };
+
   if (loading) {
     return (
       <div className="skeleton space-y-4">
