@@ -1,7 +1,12 @@
-'use client';
+"use client";
 
 import { useEffect, useState } from "react";
-import { fetchForecast, fetchPM, fetchWeather } from "@/app/lib/fetchAPI";
+import {
+  fetchForecast,
+  fetchPM,
+  fetchWeather,
+  fetchHistory,
+} from "@/app/lib/fetchAPI";
 
 import CurrentWeather from "./current-weather";
 import Header from "./header";
@@ -11,11 +16,11 @@ import WeatherGraphs from "./weather-graphs";
 import WeatherRecommendation from "./weather-recommendation";
 import ForecastTable from "./forecast-table";
 import AirQualityWarning from "./air-quality-warning";
-import FavoriteLocations from "./favorite-locations"; // สร้างไฟล์นี้
+import FavoriteLocations from "./favorite-locations";
 import { CardSkeleton, ForecastSkeleton } from "./ui/skeleton";
 
 export default function WeatherDashboard() {
-  const [activeTab, setActiveTab] = useState("Today"); // 👈 เพิ่ม state สำหรับแท็บ
+  const [activeTab, setActiveTab] = useState("Today");
   const [location, setLocation] = useState({
     latitude: 13.736717,
     longitude: 100.523186,
@@ -23,9 +28,11 @@ export default function WeatherDashboard() {
   });
   const [weather, setWeather] = useState<any>(null);
   const [forecast, setForecast] = useState<any>([]);
+  const [history, setHistory] = useState<any>([]);
   const [pm, setPM] = useState<any>(null);
   const [loadingWeather, setLoadingWeather] = useState(true);
   const [loadingForecast, setLoadingForecast] = useState(true);
+  const [loadingHistory, setLoadingHistory] = useState(true);
   const [loadingPM, setLoadingPM] = useState(true);
 
   useEffect(() => {
@@ -78,6 +85,22 @@ export default function WeatherDashboard() {
       }
     };
 
+    const fetchHistoryData = async () => {
+      try {
+        setLoadingHistory(true);
+        const HistoryData = await fetchHistory({
+          latitude: location.latitude,
+          longitude: location.longitude,
+        });
+        setHistory(HistoryData.list);
+      } catch (err) {
+        console.error("Error fetching forecast:", err);
+      } finally {
+        setLoadingHistory(false);
+      }
+    };
+
+    fetchHistoryData();
     fetchWeatherData();
     fetchForecastData();
     fetchPMData();
@@ -111,8 +134,6 @@ export default function WeatherDashboard() {
     <div className="max-w-7xl mx-auto p-4">
       <Header setLocation={setLocation} />
       <Navigation activeTab={activeTab} setActiveTab={setActiveTab} />
-
-      {/* แสดงเนื้อหาตามแท็บที่เลือก */}
       {activeTab === "Today" && (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
           <div className="space-y-4">
@@ -125,8 +146,11 @@ export default function WeatherDashboard() {
                 loading={loadingWeather}
               />
             )}
-            <WeatherMap latitude={location.latitude} longitude={location.longitude} />
-            <WeatherGraphs />
+            <WeatherMap
+              latitude={location.latitude}
+              longitude={location.longitude}
+            />
+            {loadingHistory ? <CardSkeleton /> : <WeatherGraphs history={history} loading={loadingHistory}/>}
           </div>
           <div className="space-y-4">
             <WeatherRecommendation weather={weather} pm={pm} />
@@ -135,14 +159,15 @@ export default function WeatherDashboard() {
             ) : (
               <ForecastTable forecast={forecast} loading={loadingForecast} />
             )}
-            {loadingPM ? <ForecastSkeleton /> : <AirQualityWarning pm={pm} loading={loadingPM} />}
+            {loadingPM ? (
+              <ForecastSkeleton />
+            ) : (
+              <AirQualityWarning pm={pm} loading={loadingPM} />
+            )}
           </div>
         </div>
       )}
-
-      {activeTab === "Favorite" && <FavoriteLocations weather={weather}/>} {/* 👈 แสดงคอนเทนต์ Favorite */}
-
-      {activeTab === "Graph" && <WeatherGraphs />} {/* 👈 แสดงคอนเทนต์ Graph */}
+      {activeTab === "Favorite" && <FavoriteLocations weather={weather} />}{" "}
     </div>
   );
 }

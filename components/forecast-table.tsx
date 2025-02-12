@@ -5,8 +5,6 @@ import {ForecastProps} from "@/app/lib/definitions"
 
 export default function ForecastTable({forecast, loading}:{forecast:ForecastProps, loading:boolean}) {
 
-
-
   if (loading) {
     return (
       <div className="skeleton space-y-4">

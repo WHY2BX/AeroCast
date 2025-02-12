@@ -46,6 +46,11 @@ export type Location = {
       };
     }>;
   }
+
+  export interface HistoryProp {
+    city: Location;
+    list: WeatherProps[];
+  }
   
   interface PmData {
     components: {
