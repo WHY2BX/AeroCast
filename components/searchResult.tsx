@@ -23,7 +23,7 @@ export default function SearchResultList({ results, setLocation, setSearchResult
             if (result?.name?.toLowerCase() !== 'unknown' && result?.LocalizedName?.toLowerCase() !== 'unknown') {
               return (
                 <div key={index} className="p-2 hover:bg-gray-100" onClick={() => selectLocation(result?.lat||result?.GeoPosition?.Latitude, result?.lon || result?.GeoPosition?.Longitude , result?.name || result?.LocalizedName)}>
-                  {result?.name || result?.LocalizedName}, {result?.Country?.LocalizedName}
+                  {result?.name || result?.LocalizedName}, {result?.Country?.LocalizedName || result?.country}
                 </div>
               );
             }

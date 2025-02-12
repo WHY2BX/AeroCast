@@ -36,21 +36,19 @@ export default function WeatherGraphs({ history, loading }: { history: HistoryPr
     return <p>Loading...</p>;
   }
 
+  
   // ตรวจสอบว่ามีข้อมูลหรือไม่
-  if (!history || !history.list || history.list.length === 0) {
-    console.log(history)
-    return <p>No data available</p>;
-  }
+ 
 
   // ดึงค่าเวลามาเป็น labels (แปลงเป็น HH:mm)
-  const labels = history.list.map((entry) =>
-    new Date(entry.dt * 1000).toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit" })
+  const labels = history.map((entry) =>
+    new Date(entry?.dt * 1000).toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit" })
   );
 
   // ดึงค่าที่ต้องการ เช่น อุณหภูมิ
-  const tempData = history.list.map((entry) => entry.main.temp);
+  const tempData = history.map((entry) => entry?.main?.temp);
   // ถ้ามีค่าฝุ่น PM2.5 ให้ดึงออกมา (ตอนนี้ไม่มีใน API response)
-  const pm25Data = history.list.map(() => Math.random() * 50); // สมมติว่ามีค่า PM2.5
+  const pm25Data = history.map(() => Math.random() * 50); // สมมติว่ามีค่า PM2.5
 
   const tempDataset = {
     labels,
