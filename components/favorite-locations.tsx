@@ -1,92 +1,102 @@
 "use client";
 
+import { SearchProps } from "@/app/lib/definitions";
 import { Cloud, Heart } from "lucide-react";
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 
 interface FavoriteLocation {
-    name: string;
-    latitude: number;
-    longitude: number;
-    weather: string;
-    temperature: number;
+  name: string;
+  latitude: number;
+  longitude: number;
+  weather: string;
+  temperature: number;
 }
 
-export default function FavoriteLocations() {
-    const [favorites, setFavorites] = useState<FavoriteLocation[]>([]);
-    const { data: session } = useSession();
-    const userId = session?.user?.id;
+interface FavoriteLocationsProps extends SearchProps {
+  activeTab: string;
+  setActiveTab: (tab: string) => void;
+}
 
-    useEffect(() => {
-        if (!userId) return;
+export default function FavoriteLocations({ setLocation, activeTab, setActiveTab }: FavoriteLocationsProps) {
+  const [favorites, setFavorites] = useState<FavoriteLocation[]>([]);
+  const { data: session } = useSession();
+  const userId = session?.user?.id;
 
-        async function fetchFavorites() {
-            try {
-                const res = await fetch(`/api/favorite?userId=${userId}`);
-                const data = await res.json();
-                setFavorites(data.favorites || []);
-            } catch (err) {
-                console.error("Error fetching favorites:", err);
-            }
-        }
+  useEffect(() => {
+    if (!userId) return;
 
-        fetchFavorites();
-    }, [userId]);
+    async function fetchFavorites() {
+      try {
+        const res = await fetch(`/api/favorite?userId=${userId}`);
+        const data = await res.json();
+        setFavorites(data.favorites || []);
+      } catch (err) {
+        console.error("Error fetching favorites:", err);
+      }
+    }
 
-    const handleFavorite = async (cityName: string) => {
-        if (!userId) return;
+    fetchFavorites();
+  }, [userId]);
 
-        try {
-            const response = await fetch("/api/favorite", {
-                method: "DELETE",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({ userId, name: cityName }),
-            });
+  const handleFavorite = async (cityName: string, event: React.MouseEvent) => {
+    event.stopPropagation(); // Prevent triggering `selectLocation`
 
-            if (!response.ok) {
-                throw new Error("Failed to remove favorite location");
-            }
+    if (!userId) return;
 
-            setFavorites((prev) => prev.filter((fav) => fav.name !== cityName));
-            console.log("Favorite removed:", cityName);
-        } catch (error) {
-            console.error("Error updating favorite location:", error);
-        }
-    };
+    try {
+      const response = await fetch("/api/favorite", {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ userId, name: cityName }),
+      });
 
-    return (
-        <div className="flex justify-center items-center">
-            <div className="w-full max-w-md p-4 space-y-3">
-                {favorites.length === 0 ? (
-                    <p className="text-center text-gray-500">No favorite locations yet.</p>
-                ) : (
-                    favorites.map((fav) => (
-                        <div
-                            key={fav.name}
-                            className="relative flex items-center justify-between p-4 rounded-2xl bg-gradient-to-r from-blue-600 to-blue-400 text-white"
-                        >
-                            <div className="flex items-center gap-3">
-                                <Cloud className="w-6 h-6" />
-                                <div>
-                                    <h2 className="text-xl font-medium">{fav.name}</h2>
-                                    <p className="text-sm text-blue-100">{fav.weather}</p>
-                                </div>
-                            </div>
-                            <div className="flex items-center gap-4">
-                                <span className="text-2xl font-semibold">{fav.temperature}°C</span>
-                                <button
-                                    onClick={() => handleFavorite(fav.name)}
-                                    className="text-white hover:text-pink-200 transition-colors"
-                                >
-                                    <Heart className="w-5 h-5 fill-current text-pink-500" />
-                                </button>
-                            </div>
-                        </div>
-                    ))
-                )}
+      if (!response.ok) throw new Error("Failed to remove favorite location");
+
+      setFavorites((prev) => prev.filter((fav) => fav.name !== cityName));
+      console.log("Favorite removed:", cityName);
+    } catch (error) {
+      console.error("Error updating favorite location:", error);
+    }
+  };
+
+  function selectLocation(latitude: number, longitude: number, cityName: string) {
+    setLocation({ latitude, longitude, cityName });
+    setActiveTab("Today");
+  }
+
+  return (
+    <div className="flex justify-center items-center">
+      <div className="w-full max-w-md p-4 space-y-3">
+        {favorites.length === 0 ? (
+          <p className="text-center text-gray-500">No favorite locations yet.</p>
+        ) : (
+          favorites.map((fav) => (
+            <div
+              key={fav.name}
+              className="relative flex items-center justify-between p-4 rounded-2xl bg-gradient-to-r from-blue-600 to-blue-400 text-white cursor-pointer"
+              onClick={() => selectLocation(fav.latitude, fav.longitude, fav.name)}
+            >
+              <div className="flex items-center gap-3">
+                <Cloud className="w-6 h-6" />
+                <div>
+                  <h2 className="text-xl font-medium">{fav.name}</h2>
+                  <p className="text-sm text-blue-100">{fav.weather}</p>
+                </div>
+              </div>
+              <div className="flex items-center gap-4">
+                <span className="text-2xl font-semibold">{fav.temperature}°C</span>
+                <button
+                  onClick={(event) => handleFavorite(fav.name, event)}
+                  className="text-white hover:text-pink-200 transition-colors"
+                >
+                  <Heart className="w-5 h-5 fill-current text-pink-500" />
+                </button>
+              </div>
             </div>
-        </div>
-    );
+          ))
+        )}
+      </div>
+    </div>
+  );
 }

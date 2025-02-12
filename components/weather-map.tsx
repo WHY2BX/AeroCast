@@ -15,18 +15,18 @@ import { Location } from "@/app/lib/definitions";
 
 // ใช้ปรับตำแหน่ง center ของ map ใหม่ตอนผู้ใช้เปลี่ยนสถานที่
 function ChangeMapCenter({ center }: { center: LatLngTuple }) {
-  useMapEvents({
-    moveend: (event) => {
-      event.target.setView(center, event.target.getZoom());
-    },
-  });
-
+  const map = useMap();
+  useEffect(() => {
+    map.setView(center, map.getZoom());
+  }, [center, map]);
   return null;
 }
+
 export default function WeatherMap({ latitude, longitude }: Location) {
-  const [map, setMap] = useState("/api/map_temp");
+  const [map, setMap] = useState('/api/map_temp');
   const [activeTab, setActiveTab] = useState("temp");
   const [center, setCenter] = useState<LatLngTuple>([latitude, longitude]);
+
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -40,7 +40,7 @@ export default function WeatherMap({ latitude, longitude }: Location) {
   const changeMap = async (buttonID:number) => {
     try {
       const res = await fetch(
-        buttonID === 1 ? "/api/map_temp" : buttonID === 2 ? "/api/map_pm2.5" : "/api/map_rain"
+        buttonID === 1 ? '/api/map_temp' : buttonID === 2 ? '/api/map_pm2.5' : '/api/map_rain'
       );
       const data = await res.json();
       setMap(data.url);
@@ -72,33 +72,9 @@ export default function WeatherMap({ latitude, longitude }: Location) {
         </MapContainer>
       </div>
       <div className="flex gap-2 mt-2">
-        <button
-          className={cn(
-            "flex-1 py-1 px-4 rounded text-sm",
-            activeTab === "temp" ? "bg-[#7CB9E8] text-white" : "bg-gray-100 text-gray-600"
-          )}
-          onClick={() => changeMap(1)}
-        >
-          Temperature
-        </button>
-        <button
-          className={cn(
-            "flex-1 py-1 px-4 rounded text-sm",
-            activeTab === "pm" ? "bg-[#7CB9E8] text-white" : "bg-gray-100 text-gray-600"
-          )}
-          onClick={() => changeMap(2)}
-        >
-          PM2.5
-        </button>
-        <button
-          className={cn(
-            "flex-1 py-1 px-4 rounded text-sm",
-            activeTab === "rain" ? "bg-[#7CB9E8] text-white" : "bg-gray-100 text-gray-600"
-          )}
-          onClick={() => changeMap(3)}
-        >
-          Accumulated precipitation rain
-        </button>
+        <button className={cn("flex-1 py-1 px-4 rounded text-sm", activeTab === 'temp' ? "bg-[#7CB9E8] text-white" : "bg-gray-100 text-gray-600")} onClick={()=>changeMap(1)}>Temperature</button>
+        <button className={cn("flex-1 py-1 px-4 rounded text-sm", activeTab === 'pm' ? "bg-[#7CB9E8] text-white" : "bg-gray-100 text-gray-600")} onClick={()=>changeMap(2)}>PM2.5</button>
+        <button className={cn("flex-1 py-1 px-4 rounded text-sm", activeTab === 'rain' ? "bg-[#7CB9E8] text-white" : "bg-gray-100 text-gray-600")} onClick={()=>changeMap(3)}>Accumulated precipitation rain</button>
       </div>
     </Card>
   );
