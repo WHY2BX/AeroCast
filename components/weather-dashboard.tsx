@@ -34,7 +34,6 @@ export default function WeatherDashboard() {
   const [loadingForecast, setLoadingForecast] = useState(true);
   const [loadingHistory, setLoadingHistory] = useState(true);
   const [loadingPM, setLoadingPM] = useState(true);
-
   useEffect(() => {
     getLocation();
   }, []);
