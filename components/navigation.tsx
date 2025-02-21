@@ -3,7 +3,7 @@
 import { cn } from "@/lib/utils";
 
 export default function Navigation({ activeTab, setActiveTab }) {
-  const tabs = ["Today", "Favorite", "Graph"];
+  const tabs = ["Today", "Favorite"];
 
   return (
     <nav className="bg-[#7CB9E8] rounded-lg p-1">

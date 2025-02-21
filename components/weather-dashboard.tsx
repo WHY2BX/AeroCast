@@ -166,7 +166,7 @@ export default function WeatherDashboard() {
           </div>
         </div>
       )}
-      {activeTab === "Favorite" && <FavoriteLocations weather={weather} />}{" "}
+      {activeTab === "Favorite" && <FavoriteLocations weather={weather} setLocation={setLocation} setActiveTab={setActiveTab}/>}{" "}
     </div>
   );
 }

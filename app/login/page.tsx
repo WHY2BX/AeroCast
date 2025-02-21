@@ -31,49 +31,58 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100">
-      <main className="w-full max-w-md p-6 bg-white rounded shadow-md">
-        <h2 className="text-center text-lg font-bold">Login</h2>
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <label className="block text-sm font-medium">Username</label>
-            <input
-              type="text"
-              className="w-full p-2 border rounded"
-              value={userData.name}
-              onChange={(e) =>
-                setUserData({ ...userData, name: e.target.value })
-              }
-              required
-            />
+    <div className="flex items-center justify-center min-h-screen bg-gray-100"> 
+      <main className="w-full max-w-lg mx-auto py-8 px-4 ">
+        <div className="bg-white rounded-lg shadow overflow-hidden">
+          <div className="bg-sky-200 px-4 py-3">
+            <h2 className="text-lg font-medium text-gray-900 text-center">
+              Login
+            </h2>
           </div>
-          <div>
-            <label className="block text-sm font-medium">Password</label>
-            <input
-              type="password"
-              className="w-full p-2 border rounded"
-              value={userData.password}
-              onChange={(e) =>
-                setUserData({ ...userData, password: e.target.value })
-              }
-              required
-            />
+          <div className="max-w-md mx-auto p-6 bg-white rounded-md">
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium">Username</label>
+                <input
+                  type="text"
+                  className="w-full p-2 border rounded"
+                  value={userData.name}
+                  onChange={(e) =>
+                    setUserData({ ...userData, name: e.target.value })
+                  }
+                  required
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium">Password</label>
+                <input
+                  type="password"
+                  className="w-full p-2 border rounded"
+                  value={userData.password}
+                  onChange={(e) =>
+                    setUserData({ ...userData, password: e.target.value })
+                  }
+                  required
+                />
+              </div>
+              <button
+                type="submit"
+                className="w-full bg-blue-500 text-white p-2 rounded"
+              >
+                Login
+              </button>
+            </form>
+            <button
+              className="w-full mt-4 bg-red-500 text-white p-2 rounded"
+              onClick={() => signIn("google")}
+            >
+              Register with Google
+            </button>
           </div>
-          <button
-            type="submit"
-            className="w-full bg-blue-500 text-white p-2 rounded"
-          >
-            Login
-          </button>
-        </form>
-        <button
-          className="w-full mt-4 bg-red-500 text-white p-2 rounded"
-          onClick={() => signIn("google")}
-        >
-          Login with Google
-        </button>
-        {error && <p className="text-red-500 text-sm mt-2">{error}</p>}
+          {error && <p className="text-red-500">{error}</p>}
+        </div>
       </main>
-    </div>
+      </div>
+
   );
 }
