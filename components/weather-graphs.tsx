@@ -46,7 +46,7 @@ export default function WeatherGraphs({ history, loading }: { history: HistoryPr
   );
 
   // ดึงค่าที่ต้องการ เช่น อุณหภูมิ
-  const tempData = history.map((entry) => entry?.main?.temp);
+  const tempData = history.map((entry) => (entry?.main?.temp)-273);
   // ถ้ามีค่าฝุ่น PM2.5 ให้ดึงออกมา (ตอนนี้ไม่มีใน API response)
   const pm25Data = history.map(() => Math.random() * 50); // สมมติว่ามีค่า PM2.5
 
