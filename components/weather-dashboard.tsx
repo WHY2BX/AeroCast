@@ -38,19 +38,20 @@ export default function WeatherDashboard() {
     getLocation();
   }, []);
 
+  // fetch ข้อมูลต่างๆจากapiเพื่อเอามาเเสดงผล
   useEffect(() => {
     const fetchWeatherData = async () => {
       try {
-        setLoadingWeather(true);
+        setLoadingWeather(true); //ทำการ setloading เพื่อทำการเเสดงผล skeleton ui ในเเต่ละcomponent
         const weatherData = await fetchWeather({
           latitude: location.latitude,
           longitude: location.longitude,
         });
-        setWeather(weatherData);
+        setWeather(weatherData); //fetch ข้อมูลเสร็จก็ set ข้อมูลเพื่อส่งข้อมูลไปยัง component อื่นๆต่อไป
       } catch (err) {
         console.error("Error fetching weather:", err);
       } finally {
-        setLoadingWeather(false);
+        setLoadingWeather(false);  // setloading false เมื่อ fetch ข้อมูลเสร็จ
       }
     };
 
@@ -103,9 +104,9 @@ export default function WeatherDashboard() {
     fetchWeatherData();
     fetchForecastData();
     fetchPMData();
-  }, [location]);
+  }, [location]);  //ทำการ fetch ข้อมูลใหม่ทุกครั้งเมื่อ location เปลี่ยนเเปลง (ตอนผู้ใช้ทำการ search สถานที่)
 
-  function getLocation() {
+  function getLocation() { //ใช้ geolocation เพื่อดึงตำเเหน่งปัจจุบันของผู้ใช้งาน
     if (!navigator.geolocation) {
       console.error("Geolocation is not supported by your browser");
       return;

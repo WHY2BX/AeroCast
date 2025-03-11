@@ -11,7 +11,7 @@ export default function Input({ setSearchResult, setSearch, search }: SearchProp
     };
     try {
 
-      const response = await fetch(`/api/searchlocation?input=${value}`);
+      const response = await fetch(`/api/searchlocation?input=${value}`); //เรียก api เพื่อหา location จาก input
       const result = await response.json();
       console.log(result.data)
       setSearchResult(result)

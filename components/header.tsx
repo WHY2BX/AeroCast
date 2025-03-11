@@ -10,8 +10,8 @@ import { useRouter } from "next/navigation";
 
 
 export default function Header({ setLocation }: SearchProps) {
-  const [searchResult, setSearchResult] = useState<any>(null)
-  const [search, setSearch] = useState("")
+  const [searchResult, setSearchResult] = useState<any>(null) //ใช้รับค่าผลการ search
+  const [search, setSearch] = useState("") //ใช้รับค่า input การ search
   const { data: session } = useSession();
   const router = useRouter();
   

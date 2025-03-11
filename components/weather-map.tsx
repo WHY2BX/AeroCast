@@ -2,11 +2,10 @@
 
 import dynamic from 'next/dynamic';
 
-// ลบการ import ของ react-leaflet แบบปกติ และแทนที่ด้วยการ import แบบ dynamic
 const MapContainer = dynamic(() => import('react-leaflet').then(mod => mod.MapContainer), { ssr: false });
 const TileLayer = dynamic(() => import('react-leaflet').then(mod => mod.TileLayer), { ssr: false });
 import { useMap } from 'react-leaflet';
-import { Card } from "@/components/ui/card";
+import { Card } from "@/components/ui/card";  
 import "leaflet/dist/leaflet.css";
 import { LatLngTuple } from "leaflet";
 import { useState, useEffect } from "react";
