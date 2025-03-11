@@ -34,7 +34,7 @@ export default function RegisterPage() {
   };
 
   return (
-    <body className="flex items-center justify-center min-h-screen bg-gray-100">
+    <div className="flex items-center justify-center min-h-screen bg-gray-100">
       <main className="w-full max-w-lg mx-auto py-8 px-4">
         <div className="bg-white rounded-lg shadow overflow-hidden">
           <div className="bg-sky-200 px-4 py-3">
@@ -105,6 +105,6 @@ export default function RegisterPage() {
           {error && <p className="text-red-500">{error}</p>}
         </div>
       </main>
-    </body>
+    </div>
   );
 }

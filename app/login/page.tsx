@@ -76,7 +76,7 @@ export default function LoginPage() {
               className="w-full mt-4 bg-red-500 text-white p-2 rounded"
               onClick={() => signIn("google")}
             >
-              Register with Google
+              Login with Google
             </button>
           </div>
           {error && <p className="text-red-500">{error}</p>}
